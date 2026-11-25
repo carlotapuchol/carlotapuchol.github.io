@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Carlota Puchol · Technical Artist</title>
+<meta name="description" content="Technical Artist portfolio: procedural tools, shaders and real-time VFX in Houdini and Unreal Engine 5.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Diseño: cine oscuro. Portada con vídeo; proyectos en tarjetas por categoría; al pinchar una tarjeta se abre
+   la página del proyecto (vídeo, qué hace, cómo funciona paso a paso, galería y enlace a ArtStation). */
+:root{
+  --bg:#0b0e15; --surface:#131926; --surface-2:#1a2132; --line:#252e42;
+  --ink:#eef1f6; --muted:#98a2b6; --accent:#9db0ff; --accent-2:#c7a6ff; --warm:#f0b36a;
+  --f-display:"Sora","Segoe UI",system-ui,sans-serif;
+  --f-body:"Inter","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--f-body);-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden}
+a{color:inherit}
+img,video{max-width:100%;display:block}
+button{font:inherit;color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.eyebrow{font:500 12.5px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+
+/* menú */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:rgba(11,14,21,.9)}
+.topnav{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);z-index:10;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.topnav.solid{background:rgba(11,14,21,.82);backdrop-filter:blur(12px);border-color:rgba(37,46,66,.7)}
+.topnav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:16px}
+.mark{font:700 16px var(--f-display);letter-spacing:.01em;text-decoration:none}
+.mark span{font-weight:300;color:var(--muted)}
+.links{display:flex;gap:24px;align-items:center;font-size:14px}
+.links a{text-decoration:none;color:#c9d0dd}
+.links a:hover{color:#fff}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--f-body);text-decoration:none;border-radius:999px;padding:11px 20px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.btn:hover{border-color:var(--accent);background:rgba(157,176,255,.12);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#0b0e15;border:0}
+.btn.primary:hover{filter:brightness(1.08)}
+@media (max-width:700px){.links a.hide-s{display:none}}
+
+/* portada */
+.hero{position:relative;height:100vh;height:100svh;min-height:560px;display:flex;align-items:center;overflow:hidden}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;
+  background:radial-gradient(120% 90% at 20% 60%,rgba(11,14,21,.25) 0%,rgba(11,14,21,.75) 70%),
+             linear-gradient(180deg,rgba(11,14,21,.55) 0%,rgba(11,14,21,0) 30%,rgba(11,14,21,0) 60%,var(--bg) 100%)}
+.hero .wrap{width:100%;position:relative;z-index:2}
+.hero .eyebrow{display:inline-block;padding:6px 12px;border:1px solid rgba(157,176,255,.35);border-radius:999px;background:rgba(11,14,21,.45);backdrop-filter:blur(6px)}
+h1{font:800 clamp(52px,10vw,132px)/.92 var(--f-display);margin:22px 0 18px;letter-spacing:-.035em}
+h1 .soft{display:block;font-weight:300;color:transparent;-webkit-text-stroke:1.5px rgba(238,241,246,.85)}
+.tagline{font:400 clamp(18px,2.2vw,23px)/1.45 var(--f-body);color:#dfe4ee;max-width:34ch;margin:0 0 30px}
+.tagline b{font-weight:600;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.scroll{z-index:2;position:absolute;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font:500 11px var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.scroll i{width:1px;height:38px;background:linear-gradient(var(--accent),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.credit{z-index:2;position:absolute;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(26px + env(safe-area-inset-bottom,0px));font:400 11px var(--f-mono);color:rgba(152,162,182,.8)}
+@media (max-width:640px){.credit{display:none}}
+
+/* secciones */
+section.block{padding-block:96px 24px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:40px}
+h2{font:700 clamp(30px,4vw,46px)/1.1 var(--f-display);margin:8px 0 0;letter-spacing:-.02em}
+.sec-head p{color:var(--muted);max-width:44ch;margin:0}
+.cats{display:flex;flex-wrap:wrap;gap:10px;margin:-12px 0 8px}
+.cats a{text-decoration:none;font:600 14px var(--f-body);padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:var(--surface);transition:border-color .2s,background .2s}
+.cats a:hover{border-color:var(--accent);background:rgba(157,176,255,.12)}
+.cat{padding-top:64px;scroll-margin-top:40px}
+.cat-head{display:flex;align-items:baseline;gap:16px;margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.cat-head .num{font:500 14px var(--f-mono);color:var(--accent)}
+.cat-head h2{margin:0;font-size:clamp(26px,3.2vw,36px)}
+h3.sub{font:500 13px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:28px 0 16px}
+
+/* tarjetas */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;text-align:left;padding:0;cursor:pointer;transition:border-color .25s,transform .25s,box-shadow .25s}
+.card:hover{border-color:rgba(157,176,255,.55);transform:translateY(-4px);box-shadow:0 22px 60px -24px rgba(157,176,255,.45)}
+.card .media{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}
+.card .media video,.card .media img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.card:hover .media video,.card:hover .media img{transform:scale(1.04)}
+.card .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.tags li{font:500 11px var(--f-mono);letter-spacing:.04em;color:var(--accent);background:rgba(157,176,255,.1);border-radius:999px;padding:3px 10px}
+.card h3{font:700 24px/1.2 var(--f-display);margin:0;letter-spacing:-.01em}
+.card p{margin:0;color:#cdd3df}
+.open{margin-top:auto;padding-top:6px;display:inline-flex;align-items:center;gap:8px;font:600 14px var(--f-body);color:var(--accent)}
+.open i{font-style:normal;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(157,176,255,.15);transition:transform .25s,background .25s}
+.card:hover .open i{transform:translateX(4px);background:var(--accent);color:#0b0e15}
+.peek{position:absolute;right:14px;top:14px;font:600 12px var(--f-body);padding:6px 12px;border-radius:999px;background:rgba(11,14,21,.72);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);opacity:0;transform:translateY(-4px);transition:opacity .25s,transform .25s}
+.card:hover .peek,.card:focus-visible .peek{opacity:1;transform:none}
+@media (hover:none){.peek{opacity:1;transform:none}}
+.soon{border:1px dashed var(--line);border-radius:18px;padding:28px;display:flex;flex-direction:column;justify-content:center;gap:10px;min-height:220px}
+.soon h3{font:700 22px/1.2 var(--f-display);margin:0}
+.soon p{margin:0;color:var(--muted)}
+.badge{align-self:flex-start;font:500 12px var(--f-mono);color:var(--warm);border:1px solid rgba(240,179,106,.4);border-radius:999px;padding:4px 12px;white-space:nowrap}
+
+/* página de proyecto */
+.proj{position:fixed;inset:0;z-index:40;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;animation:rise .35s ease}
+.proj[hidden]{display:none}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.proj-bar{position:sticky;top:0;z-index:2;background:rgba(11,14,21,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.proj-bar .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:12px}
+.proj-bar .crumb{font:500 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.proj-hero{max-width:1200px;margin:28px auto 0;padding-inline:max(20px,env(safe-area-inset-left,0px))}
+.proj-hero video,.proj-hero img{width:100%;border-radius:16px;border:1px solid var(--line);background:#000;max-height:72vh;object-fit:contain}
+.proj-head{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:48px;padding-block:40px 8px}
+@media (max-width:860px){.proj-head{grid-template-columns:1fr;gap:20px}}
+.proj-head h2{font-size:clamp(34px,5vw,56px);margin:10px 0 14px}
+.proj-head .lead{font-size:19px;color:#dfe4ee;margin:0}
+.facts{display:grid;gap:14px;align-content:start}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.fact b{display:block;font:500 11px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.fact.sol{border-color:rgba(157,176,255,.45)}
+.fact.sol b{color:var(--accent)}
+.steps-h{margin:56px 0 20px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:16px;counter-reset:s}
+.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 18px}
+.steps li::before{content:counter(s,decimal-leading-zero);font:500 13px var(--f-mono);color:var(--accent);display:block;margin-bottom:8px}
+.steps h4{font:600 17px/1.3 var(--f-display);margin:0 0 6px}
+.steps p{margin:0;color:#c3cad8;font-size:15px}
+.steps code{font:500 13px var(--f-mono);color:#fff;background:rgba(157,176,255,.12);padding:1px 6px;border-radius:5px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:14px}
+.gallery button{position:relative;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:zoom-in;background:#000;aspect-ratio:16/10}
+.gallery img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.gallery button:hover{border-color:var(--accent)}
+.gallery button:hover img{transform:scale(1.05)}
+.gallery button::after{content:"";position:absolute;right:8px;top:8px;width:28px;height:28px;border-radius:50%;background:rgba(11,14,21,.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6'/%3E%3Cpath d='M20 20l-4.5-4.5M11 8v6M8 11h6'/%3E%3C/svg%3E") center/15px no-repeat}
+.gallery figcaption{position:absolute;left:0;right:0;bottom:0;padding:20px 12px 8px;font-size:12.5px;text-align:left;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+.proj-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid var(--line);margin-top:56px;padding-block:28px calc(40px + env(safe-area-inset-bottom,0px))}
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+.tools span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 11px;font-size:13.5px}
+.proj-foot .acts{display:flex;flex-wrap:wrap;gap:10px}
+
+/* sobre mí */
+.about{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:56px;align-items:start}
+.photo{position:relative;max-width:280px}
+.photo::before{content:"";position:absolute;inset:-10px;border-radius:50%;background:conic-gradient(from 200deg,var(--accent),var(--accent-2),transparent 60%,var(--accent));filter:blur(18px);opacity:.45}
+.photo img{position:relative;width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;border:2px solid rgba(157,176,255,.6)}
+.about p.lead{font-size:18px;color:#d6dbe6;max-width:56ch}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:32px;margin-top:30px}
+.cols h4{font:500 12px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.timeline li{display:grid;grid-template-columns:70px 1fr;gap:12px;font-size:14.5px}
+.timeline .y{font:500 12.5px var(--f-mono);color:var(--accent);padding-top:2px}
+.timeline span.d{display:block;color:var(--muted);font-size:13.5px}
+.skills{display:flex;flex-wrap:wrap;gap:8px}
+.skills span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 11px;font-size:13.5px}
+@media (max-width:760px){.about{grid-template-columns:1fr;gap:32px}.photo{max-width:190px}}
+
+/* contacto */
+.contact{position:relative;margin-top:96px;border-top:1px solid var(--line);overflow:hidden}
+.contact::before{content:"";position:absolute;inset:auto -10% -60% -10%;height:120%;background:radial-gradient(50% 50% at 50% 50%,rgba(157,176,255,.18),transparent 70%);pointer-events:none}
+.contact .wrap{position:relative;padding-block:80px 40px;text-align:center}
+.contact h2{font-size:clamp(34px,5vw,58px)}
+.contact p{color:var(--muted);margin:12px auto 0;max-width:46ch}
+.contact-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:28px}
+.mail{display:inline-flex;align-items:center;gap:10px;font:500 16px var(--f-mono);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 7px 7px 20px}
+.mail span{user-select:all}
+footer{color:var(--muted);font-size:13px;padding-block:28px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px));text-align:center}
+
+/* visor de imágenes */
+.lb{position:fixed;inset:0;z-index:60;background:rgba(5,7,11,.95);display:flex;align-items:center;justify-content:center;padding:calc(60px + env(safe-area-inset-top,0px)) 20px 30px}
+.lb[hidden]{display:none}
+.lb img{max-width:min(1500px,100%);max-height:100%;border-radius:12px}
+.lb .close{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:calc(14px + env(safe-area-inset-right,0px))}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.scroll i{animation:none}.proj{animation:none}.card,.card:hover,.btn:hover{transform:none}}
+</style>
+
+<nav class="topnav" id="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="mark" href="#top">Carlota Puchol <span>Technical Artist</span></a>
+    <div class="links">
+      <a href="#procedural" class="hide-s">Procedural</a>
+      <a href="#shaders" class="hide-s">Shaders</a>
+      <a href="#vfx" class="hide-s">VFX</a>
+      <a href="#about" class="hide-s">About</a>
+      <a class="btn" href="assets/CarlotaPucholMartinez_CV.pdf" target="_blank" rel="noopener">CV</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <video src="assets/web_hero_composicion.mp4" poster="assets/estanque.jpg" autoplay muted loop playsinline aria-hidden="true"></video>
+  <div class="wrap">
+    <span class="eyebrow">Houdini · Unreal Engine 5 · Real-time VFX</span>
+    <h1>Carlota<span class="soft">Puchol</span></h1>
+    <p class="tagline">Technical Artist. I build <b>procedural tools, shaders and VFX</b> that make artists faster.</p>
+    <div class="cta">
+      <a class="btn primary" href="#work">See my work</a>
+      <a class="btn" href="assets/CarlotaPucholMartinez_CV.pdf" target="_blank" rel="noopener">Download CV</a>
+    </div>
+  </div>
+  <a class="scroll" href="#work" aria-label="Scroll to work">Scroll<i></i></a>
+  <span class="credit">Forest scene · PCG + shaders + Niagara in UE5</span>
+</header>
+
+<main>
+  <section class="block wrap" id="work" aria-labelledby="work-h">
+    <div class="sec-head">
+      <div><div class="eyebrow">Selected work</div><h2 id="work-h">Tools I built</h2></div>
+      <p>Click a project to see how it works, step by step.</p>
+    </div>
+    <div class="cats" role="navigation" aria-label="Categories">
+      <a href="#procedural">Procedural tools</a><a href="#shaders">Shaders</a><a href="#vfx">VFX</a>
+    </div>
+
+    <div class="cat" id="procedural">
+      <div class="cat-head"><span class="num">01</span><h2>Procedural tools</h2></div>
+      <h3 class="sub">Unreal Engine 5 · PCG</h3>
+      <div class="grid" data-slot="pcg"></div>
+      <h3 class="sub">Houdini · Procedural modelling</h3>
+      <div class="grid" data-slot="houdini">
+        <div class="soon" data-after>
+          <span class="badge">Coming soon</span>
+          <h3>Technical Shelves</h3>
+          <p>A Houdini HDA that builds procedural furniture. Breakdown coming soon.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat" id="shaders">
+      <div class="cat-head"><span class="num">02</span><h2>Shaders</h2></div>
+      <div class="grid" data-slot="shaders"></div>
+    </div>
+
+    <div class="cat" id="vfx">
+      <div class="cat-head"><span class="num">03</span><h2>VFX</h2></div>
+      <div class="grid" data-slot="vfx"></div>
+    </div>
+  </section>
+
+  <section class="block wrap" id="about" aria-labelledby="about-h">
+    <div class="about">
+      <div class="photo"><img src="assets/foto.png" alt="Portrait of Carlota Puchol"></div>
+      <div>
+        <div class="eyebrow">About</div>
+        <h2 id="about-h">From 3D generalist to Technical Artist</h2>
+        <p class="lead">I studied 3D Animation and VFX at La Salle and worked on short films and games. What I enjoy most is the technical side: building the tools and systems that make the art possible, always thinking about the artist who will use them next.</p>
+        <div class="cols">
+          <div>
+            <h4>Experience & education</h4>
+            <ul class="timeline">
+              <li><span class="y">2026</span><span>Technical Artist intern · ARSCADE<span class="d">Remote · Houdini tools for Unreal</span></span></li>
+              <li><span class="y">2026</span><span>Advanced Master in Technical VFX for AAA Games<span class="d">Voxel School</span></span></li>
+              <li><span class="y">2023</span><span>Edojo Studio · Suiff Studio<span class="d">Game props, VTuber in Unity, cinematics</span></span></li>
+              <li><span class="y">2022–23</span><span>Glimpse Studios · short film<span class="d">3D modeller & VFX, Houdini crowds</span></span></li>
+              <li><span class="y">2018–23</span><span>BA 3D Animation & VFX<span class="d">La Salle, Universitat Ramon Llull</span></span></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Tools</h4>
+            <div class="skills">
+              <span>Houdini · HDA · VEX</span><span>Unreal Engine 5</span><span>PCG</span><span>Niagara</span><span>Material Editor</span><span>Blueprints</span><span>Houdini Engine</span><span>Karma</span><span>Maya</span><span>ZBrush</span><span>Substance Painter</span><span>Nuke</span>
+            </div>
+            <h4 style="margin-top:24px">Languages</h4>
+            <div class="skills"><span>Spanish</span><span>Catalan</span><span>English · B2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <div class="eyebrow">Contact</div>
+    <h2 id="contact-h">Let's build something</h2>
+    <p>Open to Technical Artist and Technical VFX roles, on-site, hybrid or remote.</p>
+    <div class="contact-grid">
+      <span class="mail"><span id="mail">cpuchol.studio@gmail.com</span><button class="btn" id="copy" type="button">Copy</button></span>
+    </div>
+    <div class="contact-grid">
+      <a class="btn" href="https://www.linkedin.com/in/carlotapuchol" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://bakarrrific.artstation.com/" target="_blank" rel="noopener">ArtStation</a>
+      <a class="btn primary" href="assets/CarlotaPucholMartinez_CV.pdf" target="_blank" rel="noopener">Download CV</a>
+    </div>
+  </div>
+  <footer class="wrap">© 2026 Carlota Puchol · Technical Artist</footer>
+</section>
+
+<!-- Página de proyecto (se rellena desde PROJECTS) -->
+<div class="proj" id="proj" hidden role="dialog" aria-modal="true" aria-labelledby="p-title">
+  <div class="proj-bar"><div class="wrap">
+    <span class="crumb" id="p-crumb"></span>
+    <button class="btn" id="p-close" type="button">← Back to work</button>
+  </div></div>
+  <div class="proj-hero" id="p-media"></div>
+  <div class="wrap">
+    <div class="proj-head">
+      <div>
+        <ul class="tags" id="p-tags"></ul>
+        <h2 id="p-title"></h2>
+        <p class="lead" id="p-lead"></p>
+      </div>
+      <div class="facts">
+        <div class="fact"><b>The problem</b><span id="p-problem"></span></div>
+        <div class="fact sol"><b>What the tool does</b><span id="p-solution"></span></div>
+      </div>
+    </div>
+    <h3 class="sub steps-h">How it works</h3>
+    <ol class="steps" id="p-steps"></ol>
+    <h3 class="sub steps-h">Gallery</h3>
+    <div class="gallery" id="p-gallery"></div>
+    <div class="proj-foot">
+      <div class="tools" id="p-tools"></div>
+      <div class="acts">
+        <a class="btn" id="p-art" target="_blank" rel="noopener">More on ArtStation ↗</a>
+        <button class="btn primary" id="p-next" type="button">Next project →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <img id="lbimg" alt="">
+  <button class="btn close" id="lbclose" type="button">Close ✕</button>
+</div>
+
+<script>
+/* ============================================================
+   PROYECTOS: para cambiar textos, imágenes o el enlace de ArtStation, edita aquí.
+   - slot: dónde sale la tarjeta (pcg, houdini, shaders, vfx)
+   - rate: velocidad del vídeo (1 = normal, 0.7 = más lento)
+   - artstation: enlace al proyecto en ArtStation (si está vacío, va a tu perfil)
+   ============================================================ */
+const ARTSTATION = 'https://bakarrrific.artstation.com/';
+const PROJECTS = [
+  {
+    id: 'moss', slot: 'pcg', title: 'Moss Tool', crumb: 'Procedural tools · Unreal PCG',
+    video: 'assets/web_pcg.mp4', poster: 'assets/pcg_musgo.jpg', rate: 0.7,
+    tags: ['PCG', 'Nanite', 'Unreal Engine 5'],
+    card: 'Grows moss on any mesh, on top or underneath, mixed with other vegetation.',
+    lead: 'Drop any mesh in the level and the tool covers it with moss and small plants in the right places, so rocks, trunks and roofs look like they have been in the forest for years.',
+    problem: 'Painting moss by hand on every rock, trunk and roof takes hours, and it has to be redone every time a mesh is moved or swapped.',
+    solution: 'A PCG tool that reads the shape of any mesh and places moss along the Z axis, on top or underneath, together with other vegetation.',
+    steps: [
+      ['It reads the surface', 'The tool samples points on the mesh and checks which way each one is facing, using its normal.'],
+      ['Always along Z', 'Faces looking up (<code>+Z</code>) get moss on top, and faces looking down (<code>−Z</code>) can get it underneath, like moss in the shade under a branch.'],
+      ['Mixed with other vegetation', 'Moss is combined with other small plants so it never looks like a flat green carpet.'],
+      ['Artist friendly', 'Density and offset are exposed in the Details panel: the artist only moves sliders, never the graph.'],
+      ['Light on performance', 'The moss meshes use Nanite at 29–49% of their original triangles.']
+    ],
+    gallery: [['assets/pcg_musgo.jpg', 'Moss growing on top of a rock'], ['assets/cabana_pcg.jpg', 'Cabin covered by the tool'], ['assets/pcg_ramas.jpg', 'Moss on branches and trunks']],
+    tools: ['Unreal Engine 5', 'PCG Graph', 'Nanite'], artstation: ''
+  },
+  {
+    id: 'scatter', slot: 'pcg', title: 'Scatter Tool', crumb: 'Procedural tools · Unreal PCG',
+    image: 'assets/pcg_bosque.jpg',
+    tags: ['PCG', 'Data Tables', 'Unreal Engine 5'],
+    card: 'Fills floors, walls and ceilings with props, controlled from a Data Table.',
+    lead: 'One tool to dress a whole forest: the mix of props lives in a table, so changing the look of the level is editing a few numbers.',
+    problem: 'Placing props one by one across a forest is slow, and changing the mix of props means starting again.',
+    solution: 'A PCG scatter driven by a Data Table, where every prop has its own weight and scale.',
+    steps: [
+      ['One table, all the props', 'Each row of the Data Table is a mesh with its weight (how often it appears) and its scale range.'],
+      ['Floors, walls and ceilings', 'The same tool works on any surface orientation, so it also dresses walls and ceilings.'],
+      ['Weighted choice', 'Rare props stay rare and common props fill the space, following the weights in the table.'],
+      ['Fixed and improved', 'I started from a course base where the weights were ignored and meshes got stretched, and fixed both.']
+    ],
+    gallery: [['assets/pcg_bosque.jpg', 'Forest dressed with the tool'], ['assets/pcg_nenufares.jpg', 'Lily pads on the pond'], ['assets/pcg_graph.jpg', 'The PCG graph'], ['assets/estanque.jpg', 'Pond from above']],
+    tools: ['Unreal Engine 5', 'PCG Graph', 'Data Tables'], artstation: ''
+  },
+  {
+    id: 'toro', slot: 'houdini', title: 'Tōrō Lantern Generator', crumb: 'Procedural tools · Houdini',
+    video: 'assets/web_toro.mp4', poster: 'assets/toro_render.jpg', rate: 0.8,
+    tags: ['Houdini', 'HDA', 'VEX', 'Karma'],
+    card: 'A Houdini Digital Asset that builds any Japanese stone lantern from one panel.',
+    lead: 'Every tōrō is different, but they all share the same six parts. The tool turns that into a panel: pick the parts, tweak the sliders and get a clean mesh ready for Unreal.',
+    problem: 'Modelling each lantern variation by hand, and redoing UVs and materials every time.',
+    solution: 'One Houdini Digital Asset with six parts and interchangeable types, usable inside Unreal through Houdini Engine.',
+    steps: [
+      ['Six parts, many types', 'Base, column, platform, light box, roof and finial, each with its own types and sliders.'],
+      ['Shapes with VEX', 'Petals, leaves and windows are shaped with VEX, and the roof tiers are built procedurally.'],
+      ['Ready for the engine', 'Automatic UVs, a single clean mesh and a stone material with moss on the top faces.'],
+      ['Into Unreal', 'With Houdini Engine the same panel works inside the Unreal editor.']
+    ],
+    gallery: [['assets/toro_render.jpg', 'Studio render in Karma'], ['assets/toro_clay_vs_piedra.jpg', 'Clay and stone'], ['assets/toro_azul.jpg', 'Final look'], ['assets/toro_clay.jpg', 'Clay render'], ['assets/toro_uvs.jpg', 'UV checker']],
+    tools: ['Houdini', 'VEX', 'Karma', 'Houdini Engine'], artstation: ''
+  },
+  {
+    id: 'shader', slot: 'shaders', title: 'Modular Master Material', crumb: 'Shaders · Unreal Material Editor',
+    video: 'assets/web_shaders.mp4', poster: 'assets/shader_roca.jpg', rate: 0.7,
+    tags: ['Material Editor', 'Material Functions', 'Triplanar', 'Landscape'],
+    card: 'One modular shader that textures the whole forest, and each asset only pays for the features it uses.',
+    lead: 'Rocks, cliffs, mushrooms, wood, metal and the terrain all come from the same shader. Artists switch features on and off and tweak values in an instance, and see the result instantly.',
+    problem: 'Dozens of almost identical materials: every fix had to be repeated in all of them, rocks placed together showed UV seams, and moss had to be painted by hand.',
+    solution: 'One Master Material built from reusable layers, where every feature is a switch, plus a landscape version that grows grass on its own.',
+    steps: [
+      ['Layers as a function', 'Each layer (rock, moss, soil…) is the same Material Function with its own tint, HSV, roughness, normal strength and height mask. Up to five layers mix on one asset.'],
+      ['Only pay for what you use', 'Every feature is a Static Switch. What is off is not compiled, so a simple prop does not carry the cost of the full shader.'],
+      ['Seamless rock formations', 'World-aligned (triplanar) projection: rocks placed together read as one formation, with no stretching or seams even when scaled.'],
+      ['Smart masks', 'A Z-mask puts moss on the upward faces automatically; vertex color lets artists paint layers in the level; wetness, cavity and curvature masks add age and volume.'],
+      ['The terrain too', 'A 6-layer landscape version of the same shader. Painting the grass layer spawns matching grass automatically.']
+    ],
+    gallery: [['assets/shader_roca.jpg', 'Triplanar rock with moss'], ['assets/shader_roca2.jpg', 'Rock in the scene'], ['assets/shader_roca3.jpg', 'Moss mask on top'], ['assets/shader_capas.jpg', 'Material layers'], ['assets/shader_landscape.jpg', 'Landscape layers'], ['assets/shader_instancias.jpg', 'Material instances']],
+    tools: ['Unreal Engine 5', 'Material Editor', 'Landscape'], artstation: ''
+  },
+  {
+    id: 'sword', slot: 'vfx', title: 'Electric Sword', crumb: 'VFX · Niagara',
+    video: 'assets/web_espada.mp4', poster: 'assets/espada_hero.jpg', rate: 0.8,
+    tags: ['Niagara', 'Ribbons', 'Blueprints'],
+    card: 'A charged slash with a custom trail that follows the blade.',
+    lead: 'A charge-up and a slash full of electricity, with a trail that sticks to the blade at every frame of the animation.',
+    problem: 'Niagara has no built-in trail that follows the sockets of a weapon, so the slash did not stick to the blade.',
+    solution: 'A custom trail: a Blueprint reads two sockets on the blade every tick and a custom Niagara module builds the ribbon between them.',
+    steps: [
+      ['The charge', 'Lights, lightning and particles sampled from the skeletal mesh build up before the attack.'],
+      ['Reading the blade', 'An Anim Notify Blueprint reads two sockets on the blade every tick.'],
+      ['A custom module', 'A Niagara module of my own builds the ribbon between those two points.'],
+      ['Layers of the slash', 'Ribbons for the energy, dust and lightning, plus a Fresnel weapon material animated from Sequencer.']
+    ],
+    gallery: [['assets/espada_hero.jpg', 'The slash'], ['assets/espada_carga.jpg', 'The charge'], ['assets/espada_socket.jpg', 'Blade sockets'], ['assets/espada_bp.jpg', 'Anim Notify Blueprint'], ['assets/espada_modulo.jpg', 'Custom Niagara module']],
+    tools: ['Unreal Engine 5', 'Niagara', 'Blueprints', 'Sequencer'], artstation: ''
+  },
+  {
+    id: 'frogs', slot: 'vfx', title: 'Fleeing Frogs', crumb: 'VFX · Niagara',
+    video: 'assets/web_ranas.mp4', poster: 'assets/ranas_01.jpg', rate: 1,
+    tags: ['Niagara', 'Vertex Animation', 'Blueprints'],
+    card: 'A swarm of hopping frogs that run away from the player, all in one Niagara system.',
+    lead: 'Frogs that rest, hop and turn on their own, and scatter when the player gets close. Each frog is just a particle, so a whole swarm costs almost nothing.',
+    problem: 'Many animated frogs, each one a character with its own skeleton, would be far too expensive for a forest.',
+    solution: 'The jump animation is baked into textures and played by the material, and Niagara moves every frog as a particle.',
+    steps: [
+      ['Animation in textures', 'With Anim To Texture the jump is baked into bone textures (VAT), so the frog becomes a static mesh without a skeleton.'],
+      ['Niagara picks the frame', 'The material plays the jump with World Position Offset, and Niagara tells each frog which frame to show.'],
+      ['One value drives everything', 'A phase from 0 to 1 per hop decides the frame, the distance and the direction, so animation and movement are always in sync.'],
+      ['Hop after hop', 'Each hop starts where the last one landed, turns a little at random, and the frog always faces where it jumps.'],
+      ['Running away', 'A Blueprint sends the player position. Within 4 m, frogs finish their hop and then jump away, twice as far.']
+    ],
+    gallery: [['assets/ranas_01.jpg', 'Frogs around the player'], ['assets/ranas_02.jpg', 'Frogs scattering'], ['assets/ranas_03.jpg', 'The swarm']],
+    tools: ['Unreal Engine 5', 'Niagara', 'Anim To Texture', 'Blueprints'], artstation: ''
+  }
+];
+
+/* ---------- tarjetas ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+function makeTags(list) { const ul = el('ul', 'tags'); list.forEach(t => ul.append(el('li', null, t))); return ul; }
+
+PROJECTS.forEach(p => {
+  const card = el('button', 'card'); card.type = 'button'; card.setAttribute('aria-label', 'Open project: ' + p.title);
+  const media = el('div', 'media');
+  if (p.video) {
+    const v = el('video'); v.src = p.video; v.poster = p.poster; v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none'; v.dataset.rate = p.rate || 1;
+    media.append(v);
+  } else { const i = el('img'); i.src = p.image; i.alt = ''; i.loading = 'lazy'; media.append(i); }
+  media.append(el('span', 'peek', 'Open project'));
+  const body = el('div', 'body');
+  body.append(makeTags(p.tags), el('h3', null, p.title), el('p', null, p.card));
+  const open = el('span', 'open', 'See how it works '); open.append(el('i', null, '→')); body.append(open);
+  card.append(media, body);
+  card.addEventListener('click', () => { location.hash = 'project-' + p.id; });
+  const slot = $(`[data-slot="${p.slot}"]`);
+  const after = slot.querySelector('[data-after]');
+  after ? slot.insertBefore(card, after) : slot.append(card);
+});
+
+/* vídeos de las tarjetas: más lentos y solo cuando se ven */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  const v = e.target; if (e.isIntersecting) { v.playbackRate = +v.dataset.rate || 1; v.play().catch(() => {}); } else v.pause();
+}), { threshold: 0.35 });
+document.querySelectorAll('.card video').forEach(v => { v.addEventListener('loadedmetadata', () => v.playbackRate = +v.dataset.rate || 1); io.observe(v); });
+
+/* ---------- página de proyecto ---------- */
+const proj = $('#proj'); let lastCard = null;
+function openProject(p) {
+  if (proj.hidden) lastCard = document.activeElement;
+  $('#p-crumb').textContent = p.crumb;
+  const m = $('#p-media'); m.replaceChildren();
+  if (p.video) {
+    const v = el('video'); v.src = p.video; v.poster = p.poster; v.controls = true; v.autoplay = true; v.muted = true; v.loop = true; v.playsInline = true;
+    v.addEventListener('loadedmetadata', () => v.playbackRate = p.rate || 1); m.append(v);
+  } else { const i = el('img'); i.src = p.image; i.alt = p.title; m.append(i); }
+  const tags = makeTags(p.tags); tags.id = 'p-tags'; $('#p-tags').replaceWith(tags);
+  $('#p-title').textContent = p.title;
+  $('#p-lead').textContent = p.lead;
+  $('#p-problem').textContent = p.problem;
+  $('#p-solution').textContent = p.solution;
+  const ol = $('#p-steps'); ol.replaceChildren();
+  p.steps.forEach(([h, t]) => { const li = el('li'); li.append(el('h4', null, h)); const pp = el('p'); pp.innerHTML = t; li.append(pp); ol.append(li); });
+  const g = $('#p-gallery'); g.replaceChildren();
+  p.gallery.forEach(([src, cap]) => {
+    const b = el('button'); b.type = 'button'; b.setAttribute('aria-label', 'Zoom: ' + cap);
+    const i = el('img'); i.src = src; i.alt = cap; i.loading = 'lazy';
+    b.append(i, el('figcaption', null, cap));
+    b.addEventListener('click', () => zoom(src, cap, b)); g.append(b);
+  });
+  const tools = $('#p-tools'); tools.replaceChildren(); p.tools.forEach(t => tools.append(el('span', null, t)));
+  const art = $('#p-art'); art.href = p.artstation || ARTSTATION; art.textContent = p.artstation ? 'View on ArtStation ↗' : 'More on ArtStation ↗';
+  const next = PROJECTS[(PROJECTS.indexOf(p) + 1) % PROJECTS.length];
+  $('#p-next').textContent = 'Next: ' + next.title + ' →';
+  $('#p-next').onclick = () => { location.hash = 'project-' + next.id; };
+  proj.hidden = false; proj.scrollTop = 0; document.body.classList.add('locked');
+  $('#p-close').focus({ preventScroll: true });
+}
+function closeProject() {
+  proj.hidden = true; $('#p-media').replaceChildren(); document.body.classList.remove('locked');
+  if (lastCard && lastCard.focus) lastCard.focus({ preventScroll: true });
+}
+function route() {
+  const m = location.hash.match(/^#project-(.+)$/);
+  const p = m && PROJECTS.find(x => x.id === m[1]);
+  if (p) openProject(p); else if (!proj.hidden) closeProject();
+}
+addEventListener('hashchange', route); route();
+const backToWork = () => { history.replaceState(null, '', '#work'); closeProject(); };
+$('#p-close').addEventListener('click', backToWork);
+
+/* ---------- visor de imágenes ---------- */
+const lb = $('#lb'), lbi = $('#lbimg'); let zoomFrom = null;
+function zoom(src, alt, from) { zoomFrom = from; lbi.src = src; lbi.alt = alt; lb.hidden = false; $('#lbclose').focus(); }
+function closeZoom() { lb.hidden = true; lbi.src = ''; if (zoomFrom) zoomFrom.focus(); }
+$('#lbclose').onclick = closeZoom;
+lb.addEventListener('click', e => { if (e.target === lb) closeZoom(); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (!lb.hidden) closeZoom(); else if (!proj.hidden) backToWork();
+});
+
+/* ---------- menú y email ---------- */
+const nav = $('#nav');
+const onScroll = () => nav.classList.toggle('solid', scrollY > 40);
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
+const cp = $('#copy');
+cp.onclick = () => {
+  const t = $('#mail').textContent;
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject())
+    .then(() => { cp.textContent = 'Copied ✓'; setTimeout(() => cp.textContent = 'Copy', 1500); })
+    .catch(() => { const r = document.createRange(); r.selectNodeContents($('#mail')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+};
+</script>
