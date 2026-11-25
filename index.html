@@ -333,20 +333,20 @@ const ARTSTATION = 'https://bakarrrific.artstation.com/';
 const PROJECTS = [
   {
     id: 'moss', slot: 'pcg', title: 'Moss Tool', crumb: 'Procedural tools · Unreal PCG',
-    video: 'assets/web_pcg.mp4', poster: 'assets/pcg_musgo.jpg', rate: 0.7,
+    video: 'assets/web_moss.mp4', poster: 'assets/moss_hero.jpg', rate: 1,
     tags: ['PCG', 'Nanite', 'Unreal Engine 5'],
     card: 'Grows moss on any mesh, on top or underneath, mixed with other vegetation.',
     lead: 'Drop any mesh in the level and the tool covers it with moss and small plants in the right places, so rocks, trunks and roofs look like they have been in the forest for years.',
     problem: 'Painting moss by hand on every rock, trunk and roof takes hours, and it has to be redone every time a mesh is moved or swapped.',
     solution: 'A PCG tool that reads the shape of any mesh and places moss along the Z axis, on top or underneath, together with other vegetation.',
     steps: [
-      ['It reads the surface', 'The tool samples points on the mesh and checks which way each one is facing, using its normal.'],
+      ['It reads the surface', 'A Sub Moss subgraph reads the mesh of each point, samples its surface with Mesh Sampler and copies the points to the real, rotated and scaled actor with Copy Points.'],
       ['Always along Z', 'Faces looking up (<code>+Z</code>) get moss on top, and faces looking down (<code>−Z</code>) can get it underneath, like moss in the shade under a branch.'],
       ['Mixed with other vegetation', 'Moss is combined with other small plants so it never looks like a flat green carpet.'],
       ['Artist friendly', 'Density and offset are exposed in the Details panel: the artist only moves sliders, never the graph.'],
       ['Light on performance', 'The moss meshes use Nanite at 29–49% of their original triangles.']
     ],
-    gallery: [['assets/pcg_musgo.jpg', 'Moss growing on top of a rock'], ['assets/cabana_pcg.jpg', 'Cabin covered by the tool'], ['assets/pcg_ramas.jpg', 'Moss on branches and trunks']],
+    gallery: [['assets/moss_hero.jpg', 'Final result in the forest'], ['assets/moss_states.jpg', 'Top only (+Z) · top + hanging ivy (−Z) · final'], ['assets/moss_top_only.jpg', 'Only the top layer'], ['assets/moss_graph.jpg', 'PCG graph: two layers split by the surface normal'], ['assets/moss_subgraph.jpg', 'Sub Moss: Mesh Sampler + Copy Points'], ['assets/pcg_musgo.jpg', 'Moss on a rock in the editor']],
     tools: ['Unreal Engine 5', 'PCG Graph', 'Nanite'], artstation: ''
   },
   {
