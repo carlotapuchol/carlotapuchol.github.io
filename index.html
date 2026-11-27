@@ -41,6 +41,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .btn:hover{border-color:var(--accent);background:rgba(157,176,255,.12);transform:translateY(-1px)}
 .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#0b0e15;border:0}
 .btn.primary:hover{filter:brightness(1.08)}
+.btn.art{background:#13aff0;color:#fff;border:0;font-size:18px;padding:15px 30px;box-shadow:0 8px 28px rgba(19,175,240,.35)}
+.btn.art:hover{background:#2bbcf6;filter:none}
+.topnav .btn.art{font-size:14px;padding:9px 18px;box-shadow:none}
 @media (max-width:700px){.links a.hide-s{display:none}}
 
 /* portada */
@@ -180,6 +183,7 @@ footer{color:var(--muted);font-size:13px;padding-block:28px;padding-bottom:calc(
       <a href="#shaders" class="hide-s">Shaders</a>
       <a href="#vfx" class="hide-s">VFX</a>
       <a href="#about" class="hide-s">About</a>
+      <a class="btn art" href="https://bakarrrific.artstation.com/" target="_blank" rel="noopener">ArtStation ↗</a>
       <a class="btn" href="assets/CarlotaPucholMartinez_CV.pdf" target="_blank" rel="noopener">CV</a>
     </div>
   </div>
@@ -192,6 +196,7 @@ footer{color:var(--muted);font-size:13px;padding-block:28px;padding-bottom:calc(
     <h1>Carlota<span class="soft">Puchol</span></h1>
     <p class="tagline">Technical Artist. I build <b>procedural tools, shaders and VFX</b> that make artists faster.</p>
     <div class="cta">
+      <a class="btn art" href="https://bakarrrific.artstation.com/" target="_blank" rel="noopener">View my ArtStation ↗</a>
       <a class="btn primary" href="#work">See my work</a>
       <a class="btn" href="assets/CarlotaPucholMartinez_CV.pdf" target="_blank" rel="noopener">Download CV</a>
     </div>
@@ -277,7 +282,7 @@ footer{color:var(--muted);font-size:13px;padding-block:28px;padding-bottom:calc(
     </div>
     <div class="contact-grid">
       <a class="btn" href="https://www.linkedin.com/in/carlotapuchol" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="btn" href="https://bakarrrific.artstation.com/" target="_blank" rel="noopener">ArtStation</a>
+      <a class="btn art" href="https://bakarrrific.artstation.com/" target="_blank" rel="noopener">ArtStation ↗</a>
       <a class="btn primary" href="assets/CarlotaPucholMartinez_CV.pdf" target="_blank" rel="noopener">Download CV</a>
     </div>
   </div>
@@ -310,7 +315,7 @@ footer{color:var(--muted);font-size:13px;padding-block:28px;padding-bottom:calc(
     <div class="proj-foot">
       <div class="tools" id="p-tools"></div>
       <div class="acts">
-        <a class="btn" id="p-art" target="_blank" rel="noopener">More on ArtStation ↗</a>
+        <a class="btn art" id="p-art" target="_blank" rel="noopener">More on ArtStation ↗</a>
         <button class="btn primary" id="p-next" type="button">Next project →</button>
       </div>
     </div>
@@ -347,12 +352,12 @@ const PROJECTS = [
       ['Light on performance', 'The moss meshes use Nanite at 29–49% of their original triangles.']
     ],
     gallery: [['assets/moss_hero.jpg', 'Final result in the forest'], ['assets/moss_states.jpg', 'Top only (+Z) · top + hanging ivy (−Z) · final'], ['assets/moss_top_only.jpg', 'Only the top layer'], ['assets/moss_graph.jpg', 'PCG graph: two layers split by the surface normal'], ['assets/moss_subgraph.jpg', 'Sub Moss: Mesh Sampler + Copy Points'], ['assets/pcg_musgo.jpg', 'Moss on a rock in the editor']],
-    tools: ['Unreal Engine 5', 'PCG Graph', 'Nanite'], artstation: ''
+    tools: ['Unreal Engine 5', 'PCG Graph', 'Nanite'], artstation: 'https://www.artstation.com/artwork/dLQJQe'
   },
   {
     id: 'scatter', slot: 'pcg', title: 'Scatter Tool', crumb: 'Procedural tools · Unreal PCG',
     image: 'assets/pcg_bosque.jpg',
-    video: 'assets/web_scatter.mp4', poster: 'assets/scatter_lily.png', rate: 1,
+    video: 'assets/web_scatter.mp4', poster: 'assets/scatter_hero.jpg', rate: 1,
     tags: ['PCG', 'Data Tables', 'Unreal Engine 5'],
     card: 'Fills floors, walls and ceilings with props, controlled from a Data Table.',
     lead: 'One tool to dress a whole forest: the mix of props lives in a table, so changing the look of the level is editing a few numbers.',
@@ -364,12 +369,12 @@ const PROJECTS = [
       ['Weighted choice', 'Rare props stay rare and common props fill the space, following the weights in the table.'],
       ['Fixed and improved', 'I started from a course base where the weights were ignored and meshes got stretched, and fixed both.']
     ],
-    gallery: [['assets/scatter_lily.png', 'Lily pads scattered on the pond'], ['assets/pcg_bosque.jpg', 'Forest dressed with the tool'], ['assets/pcg_nenufares.jpg', 'Lily pads on the pond'], ['assets/pcg_graph.jpg', 'The PCG graph'], ['assets/estanque.jpg', 'Pond from above']],
-    tools: ['Unreal Engine 5', 'PCG Graph', 'Data Tables'], artstation: ''
+    gallery: [['assets/scatter_hero.jpg', 'Lily pads scattered on the pond'], ['assets/pcg_bosque.jpg', 'Forest dressed with the tool'], ['assets/pcg_nenufares.jpg', 'Lily pads on the pond'], ['assets/pcg_graph.jpg', 'The PCG graph'], ['assets/estanque.jpg', 'Pond from above']],
+    tools: ['Unreal Engine 5', 'PCG Graph', 'Data Tables'], artstation: 'https://www.artstation.com/artwork/Z0dgom'
   },
   {
     id: 'toro', slot: 'houdini', title: 'Tōrō Lantern Generator', crumb: 'Procedural tools · Houdini',
-    video: 'assets/web_toro.mp4', poster: 'assets/toro_render.jpg', rate: 0.8,
+    video: 'assets/web_toro.mp4', poster: 'assets/toro_render.jpg', rate: 1,
     tags: ['Houdini', 'HDA', 'VEX', 'Karma'],
     card: 'A Houdini Digital Asset that builds any Japanese stone lantern from one panel.',
     lead: 'Every tōrō is different, but they all share the same six parts. The tool turns that into a panel: pick the parts, tweak the sliders and get a clean mesh ready for Unreal.',
@@ -382,11 +387,11 @@ const PROJECTS = [
       ['Into Unreal', 'With Houdini Engine the same panel works inside the Unreal editor.']
     ],
     gallery: [['assets/toro_render.jpg', 'Studio render in Karma'], ['assets/toro_clay_vs_piedra.jpg', 'Clay and stone'], ['assets/toro_azul.jpg', 'Final look'], ['assets/toro_clay.jpg', 'Clay render'], ['assets/toro_uvs.jpg', 'UV checker']],
-    tools: ['Houdini', 'VEX', 'Karma', 'Houdini Engine'], artstation: ''
+    tools: ['Houdini', 'VEX', 'Karma', 'Houdini Engine'], artstation: 'https://www.artstation.com/artwork/31woZo'
   },
   {
     id: 'shader', slot: 'shaders', title: 'Modular Master Material', crumb: 'Shaders · Unreal Material Editor',
-    video: 'assets/web_shaders.mp4', poster: 'assets/shader_roca.jpg', rate: 0.7,
+    video: 'assets/web_shaders.mp4', poster: 'assets/shader_roca.jpg', rate: 1,
     tags: ['Material Editor', 'Material Functions', 'Triplanar', 'Landscape'],
     card: 'One modular shader that textures the whole forest, and each asset only pays for the features it uses.',
     lead: 'Rocks, cliffs, mushrooms, wood, metal and the terrain all come from the same shader. Artists switch features on and off and tweak values in an instance, and see the result instantly.',
@@ -400,11 +405,11 @@ const PROJECTS = [
       ['The terrain too', 'A 6-layer landscape version of the same shader. Painting the grass layer spawns matching grass automatically.']
     ],
     gallery: [['assets/shader_roca.jpg', 'Triplanar rock with moss'], ['assets/shader_roca2.jpg', 'Rock in the scene'], ['assets/shader_roca3.jpg', 'Moss mask on top'], ['assets/shader_capas.jpg', 'Material layers'], ['assets/shader_landscape.jpg', 'Landscape layers'], ['assets/shader_instancias.jpg', 'Material instances']],
-    tools: ['Unreal Engine 5', 'Material Editor', 'Landscape'], artstation: ''
+    tools: ['Unreal Engine 5', 'Material Editor', 'Landscape'], artstation: 'https://www.artstation.com/artwork/V8Bom8'
   },
   {
     id: 'sword', slot: 'vfx', title: 'Electric Sword', crumb: 'VFX · Niagara',
-    video: 'assets/web_espada.mp4', poster: 'assets/espada_hero.jpg', rate: 0.8,
+    video: 'assets/web_espada.mp4', poster: 'assets/espada_hero.jpg', rate: 1,
     tags: ['Niagara', 'Ribbons', 'Blueprints'],
     card: 'A charged slash with a custom trail that follows the blade.',
     lead: 'A charge-up and a slash full of electricity, with a trail that sticks to the blade at every frame of the animation.',
@@ -417,7 +422,7 @@ const PROJECTS = [
       ['Layers of the slash', 'Ribbons for the energy, dust and lightning, plus a Fresnel weapon material animated from Sequencer.']
     ],
     gallery: [['assets/espada_hero.jpg', 'The slash'], ['assets/espada_carga.jpg', 'The charge'], ['assets/espada_socket.jpg', 'Blade sockets'], ['assets/espada_bp.jpg', 'Anim Notify Blueprint'], ['assets/espada_modulo.jpg', 'Custom Niagara module']],
-    tools: ['Unreal Engine 5', 'Niagara', 'Blueprints', 'Sequencer'], artstation: ''
+    tools: ['Unreal Engine 5', 'Niagara', 'Blueprints', 'Sequencer'], artstation: 'https://www.artstation.com/artwork/KRz6xr'
   },
   {
     id: 'frogs', slot: 'vfx', title: 'Fleeing Frogs', crumb: 'VFX · Niagara',
@@ -435,7 +440,7 @@ const PROJECTS = [
       ['Running away', 'A Blueprint sends the player position. Within 4 m, frogs finish their hop and then jump away, twice as far.']
     ],
     gallery: [['assets/ranas_01.jpg', 'Frogs around the player'], ['assets/ranas_02.jpg', 'Frogs scattering'], ['assets/ranas_03.jpg', 'The swarm']],
-    tools: ['Unreal Engine 5', 'Niagara', 'Anim To Texture', 'Blueprints'], artstation: ''
+    tools: ['Unreal Engine 5', 'Niagara', 'Anim To Texture', 'Blueprints'], artstation: 'https://www.artstation.com/artwork/xdBzx1'
   }
 ];
 
